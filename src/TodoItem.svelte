@@ -9,13 +9,12 @@
 
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import { fly } from "svelte/transition";
     const dispatch = createEventDispatcher();
     export let name: string;
     export let todoType: number;
 </script>
 
-<div class="section" in:fly={{ y: 50, duration: 500 }}>
+<div class="section">
     <div class="item">
         <p>{TodoTypeTulip[todoType][1]}</p>
         <p class="itemName">{name}</p>
@@ -24,12 +23,8 @@
 </div>
 
 <style>
-    * {
-        margin: 0;
-    }
     .section {
         text-align: center;
-        max-width: 400px;
         margin: 0 auto;
         font-size: 1.5em;
     }
@@ -44,10 +39,5 @@
     }
     #delete {
         cursor: pointer;
-    }
-    @media (max-width: 640px) {
-        .section {
-            max-width: none;
-        }
     }
 </style>

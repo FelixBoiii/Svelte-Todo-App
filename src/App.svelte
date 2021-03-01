@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { circInOut } from "svelte/easing";
+	import { crossfade } from "svelte/transition";
+	import { flip } from "svelte/animate";
 	import TodoItem, { TodoTypeTulip } from "./TodoItem.svelte";
 	type TodoTypeOptions = 0 | 1 | 2 | 3;
 
@@ -31,6 +34,24 @@
 			newTodoName = "";
 		}
 	};
+
+	const [send, receive] = crossfade({
+		duration: (d) => Math.sqrt(d * 200),
+
+		fallback(node, params) {
+			const style = getComputedStyle(node);
+			const transform = style.transform === "none" ? "" : style.transform;
+
+			return {
+				duration: 300,
+				easing: circInOut,
+				css: (t) => `
+					transform: ${transform} scale(${t});
+					opacity: ${t}
+				`,
+			};
+		},
+	});
 </script>
 
 <main>
@@ -62,15 +83,22 @@
 			<button class="form" on:click={addTodoItem}> Add Todo </button>
 		</div>
 
-		{#each allTodos as todo, index}
-			<TodoItem
-				name={todo.name}
-				todoType={todo.todoType}
-				on:delete={() => {
-					allTodos.splice(index, 1);
-					allTodos = allTodos;
-				}}
-			/>
+		{#each allTodos as todo, index (todo)}
+			<div
+				in:receive={{ key: todo }}
+				out:send={{ key: todo }}
+				class:lineTodo={index != 0}
+				class="allTodos"
+			>
+				<TodoItem
+					name={todo.name}
+					todoType={todo.todoType}
+					on:delete={() => {
+						allTodos.splice(index, 1);
+						allTodos = allTodos;
+					}}
+				/>
+			</div>
 		{/each}
 	</div>
 </main>
@@ -90,6 +118,18 @@
 		font-weight: 100;
 	}
 
+	.fullForm {
+		margin-bottom: 2em;
+	}
+
+	.form {
+		padding: 0.7em;
+		font-size: large;
+		border-radius: 7px;
+		margin: 0 0.2em;
+		font-weight: 600;
+	}
+
 	button {
 		color: #fff;
 		background: #ff3e00;
@@ -98,15 +138,13 @@
 		transition: all 0.2s ease 0s;
 	}
 
-	.form {
-		padding: 0.7em;
-		font-size: large;
-		border-radius: 7px;
-		margin: 0 0.2em;
+	.allTodos {
+		max-width: 400px;
+		margin: auto;
 	}
 
-	.fullForm {
-		margin-bottom: 2em;
+	.lineTodo {
+		border-top: 1px solid #cccccc;
 	}
 
 	@media (min-width: 640px) {
