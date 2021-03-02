@@ -1,9 +1,10 @@
 <script context="module" lang="ts">
     export const TodoTypeTulip: [string, string][] = [
         ["work", "👔"],
-        ["school", "🎒"],
         ["home", "🏠"],
-        ["online", "🌐"],
+        ["school", "🎓"],
+        ["self", "💪"],
+        ["other", "🗿"],
     ];
 </script>
 
@@ -39,5 +40,10 @@
     }
     #delete {
         cursor: pointer;
+    }
+    @media (max-width: 640px) {
+        .item {
+            grid-template-columns: auto 50% auto;
+        }
     }
 </style>

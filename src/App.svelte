@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { circInOut } from "svelte/easing";
+	import { cubicOut } from "svelte/easing";
 	import { crossfade } from "svelte/transition";
+	import { flip } from "svelte/animate";
 	import TodoItem, { TodoTypeTulip } from "./TodoItem.svelte";
 	type TodoTypeOptions = 0 | 1 | 2 | 3;
 
@@ -43,7 +44,7 @@
 
 			return {
 				duration: 300,
-				easing: circInOut,
+				easing: cubicOut,
 				css: (t) => `
 					transform: ${transform} scale(${t});
 					opacity: ${t}
@@ -67,7 +68,7 @@
 			/>
 
 			<select
-				class="form"
+				class="form bottomInput"
 				name="todoType"
 				id="todoTypeInput"
 				bind:value={newTodoType}
@@ -79,13 +80,16 @@
 				{/each}
 			</select>
 
-			<button class="form" on:click={addTodoItem}> Add Todo </button>
+			<button class="form bottomInput" on:click={addTodoItem}>
+				Add Todo
+			</button>
 		</div>
 
 		{#each allTodos as todo, index (todo)}
 			<div
 				in:receive={{ key: todo }}
 				out:send={{ key: todo }}
+				animate:flip={{ duration: 700 }}
 				class:lineTodo={index != 0}
 				class="allTodos"
 			>
@@ -100,13 +104,14 @@
 			</div>
 		{/each}
 	</div>
+	<div class="footer">Made by Felix</div>
 </main>
 
 <style>
 	main {
 		text-align: center;
 		padding: 1em;
-		max-width: 240px;
+		max-width: 500px;
 		margin: 0 auto;
 	}
 
@@ -146,9 +151,24 @@
 		border-top: 1px solid #cccccc;
 	}
 
-	@media (min-width: 640px) {
+	.footer {
+		bottom: 0;
+		left: 0px;
+		right: 0px;
+		width: 100%;
+		position: fixed;
+		padding-bottom: 1em;
+		font-weight: 600;
+		color: rgb(109, 109, 109);
+		background-color: #fff;
+	}
+
+	@media (max-width: 640px) {
 		main {
 			max-width: none;
+		}
+		.bottomInput {
+			margin-top: 1em;
 		}
 	}
 </style>
