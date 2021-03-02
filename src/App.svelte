@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { circInOut } from "svelte/easing";
 	import { crossfade } from "svelte/transition";
-	import { flip } from "svelte/animate";
 	import TodoItem, { TodoTypeTulip } from "./TodoItem.svelte";
 	type TodoTypeOptions = 0 | 1 | 2 | 3;
 
@@ -63,7 +62,7 @@
 				type="text"
 				bind:value={newTodoName}
 				on:keypress={(e) => {
-					if (e.charCode === 13) addTodoItem();
+					if (e.key === "Enter") addTodoItem();
 				}}
 			/>
 
